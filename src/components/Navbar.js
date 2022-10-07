@@ -20,6 +20,24 @@ function Navbar() {
         </li>
         <li>
           <NavLink
+            to="/login"
+            end
+            className={({ isActive }) => (isActive ? styles.active : '')}
+          >
+            Entrar
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/register"
+            end
+            className={({ isActive }) => (isActive ? styles.active : '')}
+          >
+            Register
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
             to="/about"
             className={({ isActive }) => (isActive ? styles.active : '')}
           >
