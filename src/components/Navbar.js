@@ -7,6 +7,7 @@ import styles from './Navbar.module.css'
 
 function Navbar() {
   const { user } = useAuthValue()
+  const { logOut } = useAuthentication()
   return (
     <nav className={styles.navbar}>
       <NavLink to="/" className={styles.brand}>
@@ -74,6 +75,11 @@ function Navbar() {
             Sobre
           </NavLink>
         </li>
+        {user && (
+          <li>
+            <button onClick={logOut}>Sair</button>
+          </li>
+        )}
       </ul>
     </nav>
   )
