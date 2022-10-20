@@ -17,7 +17,7 @@ export const useFetchDocuments = (docCollection, search = null, uid = null) => {
   const [cancelled, setCancelled] = useState(false)
 
   useEffect(() => {
-    async function loadData() {
+    const loadData = async () => {
       if (cancelled) return
 
       setLoading(true)
@@ -25,12 +25,7 @@ export const useFetchDocuments = (docCollection, search = null, uid = null) => {
       const collectionRef = await collection(db, docCollection)
 
       try {
-        let q
-
-        //busca
-        //dashboard
-
-        q = await query(collectionRef, orderBy('createdAt', 'desc'))
+        let q = await query(collectionRef, orderBy('createdAt', 'desc'))
 
         await onSnapshot(q, querySnapshot => {
           setDocuments(
@@ -43,9 +38,7 @@ export const useFetchDocuments = (docCollection, search = null, uid = null) => {
 
         setLoading(false)
       } catch (error) {
-        console.log(error)
         setError(error.message)
-
         setLoading(false)
       }
     }
@@ -56,5 +49,5 @@ export const useFetchDocuments = (docCollection, search = null, uid = null) => {
     return () => setCancelled(true)
   }, [])
 
-  return documents, loading, error
+  return { documents, loading, error }
 }
