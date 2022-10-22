@@ -11,7 +11,7 @@ function Dashboard() {
   const uid = user.uid
 
   //posts do usuário
-  const posts = []
+  const { documents: posts, loading } = useFetchDocuments('posts', null, uid)
   return (
     <div>
       <h2>Dashboard</h2>
@@ -28,6 +28,7 @@ function Dashboard() {
           <p>Tem post</p>
         </div>
       )}
+      {posts && posts.map(post => <h3>{post.title}</h3>)}
     </div>
   )
 }
