@@ -1,17 +1,17 @@
 import { useState, useEffect, useReducer } from 'react'
 import { db } from '../firebase/config'
-import { collection, addDoc, Timestamp } from 'firebase/firestore'
+import { updateDoc, doc } from 'firebase/firestore'
 
 const initalState = {
   loading: null,
   error: null
 }
 
-const insertReducer = (state, action) => {
+const updateReducer = (state, action) => {
   switch (action.type) {
     case 'LOADING':
       return { loading: true, error: null }
-    case 'INSERTED_DOC':
+    case 'UPDATED_DOC':
       return { loading: false, error: null }
     case 'ERROR':
       return { loading: false, error: action.payload }
@@ -20,8 +20,8 @@ const insertReducer = (state, action) => {
   }
 }
 
-export const useInsertDocument = docCollection => {
-  const [response, dispatch] = useReducer(insertReducer, initalState)
+export const useUpdateDocument = docCollection => {
+  const [response, dispatch] = useReducer(updateReducer, initalState)
 
   //deal with memory leak
   const [cancelled, setCancelled] = useState(false)
@@ -32,21 +32,18 @@ export const useInsertDocument = docCollection => {
     }
   }
 
-  const insertDocument = async document => {
+  const updateDocument = async (id, data) => {
     checkCancelledBeforeDispatch({
       type: 'LOADING'
     })
+
     try {
-      const newDocument = { ...document, createdAt: Timestamp.now() }
+      const docRef = await doc(db, docCollection, id)
 
-      const insertDocument = await addDoc(
-        collection(db, docCollection),
-        newDocument
-      )
-
+      const updatedDocument = await updateDoc(docRef, data)
       checkCancelledBeforeDispatch({
-        type: 'INSERTED_DOC',
-        payload: insertDocument
+        type: 'UPDATED_DOC',
+        payload: updatedDocument
       })
     } catch (error) {
       checkCancelledBeforeDispatch({
@@ -60,5 +57,5 @@ export const useInsertDocument = docCollection => {
     return () => setCancelled(true)
   }, [])
 
-  return { insertDocument, response }
+  return { updateDocument, response }
 }

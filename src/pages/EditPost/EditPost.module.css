@@ -18,7 +18,7 @@
 }
 
 .edit_post .image_preview{
-  max-width: 50%;
-  max-height: 50%;
+  max-width: 30%;
+  max-height: 30%;
   margin-bottom: 1em;
 }
